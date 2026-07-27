@@ -83,3 +83,145 @@
 #include <iomanip>
 using namespace std;
 
+// Structure to store student information
+struct Student {
+    string name;                 // Student's full name
+    int id;                      // Unique student ID number
+    vector<double> scores;       // List of scores from multiple assessments
+};
+
+// Function to calculate the average score of a student
+double calculateAverage(const Student& student) 
+{
+    double sum = 0.0;
+    for (int i = 0; i < student.scores.size(); ++i) 
+    {
+        sum += student.scores[i];
+    }
+    if (student.scores.size() == 0)
+    {
+        return 0.0; // Avoid division by zero if there are no scores
+    }
+    return sum / student.scores.size();
+}
+
+// Function to add a new student record
+void addStudent(vector<Student>& students)
+{
+    Student newStudent;
+    cout << "👤 Enter student name: ";
+    cin.ignore(); 
+    getline(cin, newStudent.name);
+    
+    cout << "🆔 Enter student ID: ";
+    cin >> newStudent.id;
+    
+    int numScores;
+    cout << "📝 How many scores? ";
+    cin >> numScores;
+    
+    for (int i = 0; i < numScores; ++i) 
+    {
+        double score;
+        cout << "📝 Enter score " << (i + 1) << ": ";
+        cin >> score;
+        newStudent.scores.push_back(score);
+    }
+    
+    students.push_back(newStudent);
+    cout << "✅ Student \"" << newStudent.name << "\" added successfully." << endl;
+}
+
+// Function to display all student records
+void displayAllStudents(const vector<Student>& students)
+{
+    if (students.empty()) 
+    {
+        cout << "📭 No students have been added yet." << endl;
+        return;
+    }
+    
+    cout << fixed << setprecision(2);
+    cout << "\n============== STUDENT RECORDS==============\n" << endl;
+    for (int i = 0; i < students.size(); ++i)
+    {
+        cout << "Student " << (i + 1) << endl;
+        cout << "Name: " << students[i].name << endl;
+        cout << "ID: " << students[i].id << endl;
+        cout << "Scores: ";
+
+        for (int j = 0; j < students[i].scores.size(); ++j) 
+        {
+            cout << students[i].scores[j] << " ";
+        }
+
+        cout << endl;
+        cout << "Average Score: " << calculateAverage(students[i]) << endl;
+        cout << "-------------------------------------------" << endl;
+    }
+}
+
+// Function to calculate average for a specific student
+void findAverage(const vector<Student>& students)
+{
+    if (students.empty()) 
+    {
+        cout << "📭 No students records available currently." << endl;
+        return;
+    }
+    int id;
+    cout << "🆔 Enter student ID: ";
+    cin >> id;
+
+    for (int i =0; i < students.size(); ++i)
+    {
+        if (students[i].id == id)
+        {
+            cout << fixed << setprecision(2);
+
+            cout << "📊 " << students[i].name << "'s average score: " << calculateAverage(students[i]) << endl;
+            return;
+        }
+    }
+    cout << "❌ Error: Student ID not found." << endl;
+}
+
+int main() 
+{
+    vector<Student> students;
+    int choice;
+    
+    do 
+    {
+        cout << "===============================" << endl;
+        cout << "    🎓 STUDENT RECORD SYSTEM MENU" << endl;
+        cout << "===============================" << endl;
+        cout << "1. ➕ Add student" << endl;
+        cout << "2. 📃 Display all students" << endl;
+        cout << "3. 📊 Calculate average score" << endl;
+        cout << "4. ❌ Quit" << endl;
+        cout << "Enter your choice (1-4): ";
+        cin >> choice;
+
+        switch (choice) 
+        {
+            case 1:
+                addStudent(students);
+                break;
+            case 2:
+                displayAllStudents(students);
+                break;
+            case 3:
+                findAverage(students);
+                break;
+            case 4:
+                cout << "👋 Thank you for using the Student Record System. Goodbye!" << endl;
+                break;
+            default:
+                cout << "❌ Invalid choice. Please enter a number between 1 and 4." << endl;
+        }
+        
+    } while (choice != 4);
+    
+    return 0;
+}
